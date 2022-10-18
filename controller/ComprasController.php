@@ -25,8 +25,7 @@ if ($_POST) {
   $cidade = $_POST['cidade'];
   $uf = $_POST['uf'];
 
-  try {
-
+  try{
     $cliente = new Cliente(
       $nome,
       $cpf_cnpj,
@@ -39,7 +38,7 @@ if ($_POST) {
       $cidade,
       $uf
     );
-
+  
     $viagem = new Viagem(
       $origem,
       $destino,
@@ -50,8 +49,11 @@ if ($_POST) {
       $criancas,
       $preco
     );
-  } catch (Exception $error) {
-    echo "<script>alert('" . $error->getMessage() . "')</script>";
+  } catch(Exception $error){
+    echo "<script>alert('".$error->getMessage() ."')</script>";
     echo "<script>history.back()</script>";
   }
+
+
+  
 }

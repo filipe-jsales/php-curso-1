@@ -14,64 +14,46 @@ class Cliente
   var $cidade;
   var $uf;
 
-  function __construct(
-    $nome,
-    $cpf_cnpj,
-    $telefone,
-    $email,
-    $cep,
-    $endereco,
-    $bairro,
-    $numero,
-    $cidade,
-    $uf
-  ) {
-
-    //validação
-    if (!$this->cepValido($cep)) throw new Exception("CEP no formato inválido");
-    if (!$this->telefoneValido($telefone)) throw new Exception("Telefone no formato inválido");
-    if (!$this->emailValido($email)) throw new Exception("Email no formato inválido");
-
+  function __construct($nome, $cpf_cnpj, $telefone, $email, $cep,
+                      $endereco, $bairro, $numero, $cidade, $uf)
+  {
+    if (!$this->validarCep($cep)) throw new Exception("CEP no formato inválido");
+    if (!$this->validarTelefone($telefone)) throw new Exception("Telefone no formato inválido");
+    
     $this->nome = $nome;
-    $this->cpf_cnpj = $cpf_cnpj;
-    $this->telefone = $telefone;
+    $this->cpf_cnpj = $this->removeFormatacao($cpf_cnpj);
+    $this->telefone = $this->removeFormatacao($telefone);
     $this->email = $email;
-    $this->cep = $cep;
+    $this->cep = $this->removeFormatacao($cep);
     $this->endereco = $endereco;
     $this->bairro = $bairro;
     $this->numero = $numero;
     $this->cidade = $cidade;
     $this->uf = $uf;
+    
   }
-
-  function cepValido($cep)
+  function validarCep($cep)
   {
-    if (strlen($cep) == 10) {
-      //22.333-333
+    if (strlen($cep) == 10){
       $regex_cep = "/[0-9]{2}\.[0-9]{3}\-[0-9]{3}/";
       return preg_match($regex_cep, $cep);
-    } else {
+    }else{
       return false;
     }
   }
 
-  function telefoneValido($telefone)
+  function validarTelefone($telefone)
   {
-    if (strlen($telefone) == 15) {
-      //(99) 99999-9999
+    if (strlen($telefone) == 15){
       $regex_telefone = "/\([0-9]{2}\)[0-9]{5}\-[0-9]{4}/";
       return preg_match($regex_telefone, str_replace(" ", "", $telefone));
-    } else {
+    }else{
       return false;
     }
   }
 
-  function emailValido($email)
-  {
-    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-      return true;
-    } else {
-      return false;
-    }
+  function removeFormatacao($info){
+    $dado = str_replace([".", "-", "/", "(", ")", " "], "", $info);
+    return $dado;
   }
 }
